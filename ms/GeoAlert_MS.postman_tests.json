@@ -1,0 +1,480 @@
+{
+	"info": {
+		"_postman_id": "db506f6d-c445-358c-4bbb-725b1a87c070",
+		"name": "GeoAlert MS",
+		"description": "Request for GeoAlert app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"description": "",
+			"item": [
+				{
+					"name": "Auth Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d23c526-14da-4e52-864a-449e30a4c901",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "72051a4e-ab9d-4319-967c-498ada83f5ed",
+								"type": "text/javascript",
+								"exec": [
+									"var username = Math.random() + '@test.com';",
+									"pm.globals.set(\"username\", username);"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{authURL}}/register",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Create user account with auth ms"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e4b6b06-e68a-4454-9f67-453813cf8727",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Set token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.globals.set(\"token\", jsonData.token);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{authURL}}/login",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Login with existing user"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3fa046c6-27a0-4143-9c75-a75c40b12b66",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{authURL}}/verify",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"verify"
+							]
+						},
+						"description": "Verify request with auth, to make sure token is valid"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "geo",
+			"description": "",
+			"item": [
+				{
+					"name": "Create Geo Document",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f9f8128-e526-4b6a-b158-53122aa0ca83",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"alerts\": []\n}"
+						},
+						"url": {
+							"raw": "{{geoURL}}/",
+							"host": [
+								"{{geoURL}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Create new geo document for user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Alert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad019fea-d9ff-48a0-8d46-4a3db3d9e7c9",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202,204]);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"First Alert\",\n\t\"longitude\": 45,\n\t\"latitude\": -75\n}"
+						},
+						"url": {
+							"raw": "{{geoURL}}/alert",
+							"host": [
+								"{{geoURL}}"
+							],
+							"path": [
+								"alert"
+							]
+						},
+						"description": "Create new alert"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Alerts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "efd921f7-8b60-4d15-9722-26c60ff0678b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Set alert Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.globals.set(\"alertId\", jsonData[0]._id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"First Alert\",\n\t\"longitude\": 45,\n\t\"latitude\": -75\n}"
+						},
+						"url": {
+							"raw": "{{geoURL}}/alert",
+							"host": [
+								"{{geoURL}}"
+							],
+							"path": [
+								"alert"
+							]
+						},
+						"description": "Gets array of alerts user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Alert",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"message\": \"This is the message\"\n}"
+						},
+						"url": {
+							"raw": "{{geoURL}}/alert/{{alertId}}",
+							"host": [
+								"{{geoURL}}"
+							],
+							"path": [
+								"alert",
+								"{{alertId}}"
+							]
+						},
+						"description": "Updates an alert by id"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Alert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eaaa4733-3d6f-443e-ab40-9cfb81f3103e",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{geoURL}}/alert/{{alertId}}",
+							"host": [
+								"{{geoURL}}"
+							],
+							"path": [
+								"alert",
+								"{{alertId}}"
+							]
+						},
+						"description": "Delete an alert by id"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "79829758-1012-49da-bfa7-04c20b45ec2c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "13899c40-17a0-414e-b902-0c82d1598d34",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "4abac01e-eb02-4cee-a5eb-4114570a4c4c",
+			"key": "authURL",
+			"value": "localhost:8080",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "e0cb4b7c-c649-403b-ba19-8240b5671aac",
+			"key": "geoURL",
+			"value": "localhost:8081",
+			"type": "string",
+			"description": ""
+		}
+	]
+}

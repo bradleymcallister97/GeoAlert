@@ -1,0 +1,72 @@
+swagger: "2.0"
+info:
+  description: "Swagger doc for Auth service"
+  version: "1.0.0"
+  title: "GeoAlert"
+tags:
+- name: "Auth"
+schemes:
+- "http"
+paths:
+  /register:
+    post:
+      tags:
+      - "Auth"
+      summary: "Create user"
+      parameters: 
+      - name: "body"
+        in: "body"
+        description: "User to create"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "Success"
+        409:
+          description: "Username already in use"
+        400:
+          description: "Creation error"
+        500:
+          description: "Error"
+  /login:
+    post:
+      tags: 
+      - "Auth"
+      summary: "Login with user"
+      parameters: 
+      - name: "body"
+        in: "body"
+        description: "User to login with"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            properties:
+              jwt:
+                type: "string"
+        401:
+          description: "Unauthorized"
+        500:
+         description: "Error"
+  /verify:
+    get:
+      tags: 
+      - "Auth"
+      summary: "Check if user session is valid"
+      responses:
+        200:
+          description: "Success - user has valid session"
+        401:
+          description: "User session is invalid"
+definitions:
+  User:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password: 
+        type: "string"

@@ -1,0 +1,128 @@
+swagger: "2.0"
+info:
+  description: "Swagger doc for GeoAlert service"
+  version: "1.0.0"
+  title: "GeoAlert"
+tags:
+- name: "GeoAlert"
+schemes:
+- "http"
+paths:
+  /:
+    post:
+      tags:
+      - "GeoAlert"
+      summary: "Create new GeoAlert"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "GeoAlert object"
+        required: true
+        schema:
+          $ref: "#/definitions/GeoAlert"
+      responses:
+        201:
+          description: "Success"
+        500:
+          description: "Error"
+    get:
+      tags:
+      - "GeoAlert"
+      summary: "Find GeoAlerts by query"
+      parameters:
+      - name: "lat"
+        in: "query"
+        description: "Latitude of current location"
+        required: false
+        type: "integer"
+      - name: "long"
+        in: "query"
+        description: "Longitude of current location"
+        required: false
+        type: "integer"
+      - name: "range"
+        in: "query"
+        description: "Radius to search with lat and long as center of circle"
+        type: "integer"
+      - name: "inRange"
+        in: "query"
+        description: "Whether to return alarts in side or outside given range"
+        required: false
+        type: "boolean"
+      - name: "activated"
+        in: "query"
+        description: "Get activated or non activated alerts"
+        type: "boolean"
+      - name: "limit"
+        in: "query"
+        description: "Max number of alerts to return"
+        type: "integer"
+      - name: "sort"
+        in: "query"
+        description: "Sort list of alerts"
+        type: "string"
+        enum:
+          - "distance"
+          - "created"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GeoAlert"
+        400:
+          description: "Invalid query"
+        500:
+          description: "Error"
+  /{alertId}:
+    delete:
+      tags:
+      - "GeoAlert"
+      summary: "Deletes a pet"
+      parameters:
+      - name: "alertId"
+        in: "path"
+        description: "GeoAlert id to delete"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "Success"
+        500:
+          description: "Error"
+    patch:
+      tags:
+      - "GeoAlert"
+      summary: "Update an existing GeoAlert"
+      parameters:
+      - name: "alertId"
+        in: "path"
+        description: "GeoAlert id to update"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "GeoAlert object to be updated"
+        required: true
+        schema:
+          $ref: "#/definitions/GeoAlert"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Error"
+definitions:
+  GeoAlert:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      message:
+        type: "string"
+      longitude:
+        type: "integer"
+      latitude:
+        type: "integer"
+      activated:
+        type: "boolean"

@@ -6,14 +6,14 @@ Repo is divided into two sections __ms__ and __client__
 ## ms
 This is the microservice folder. It contains auth and geoAlerts. Both microservices use MongoDB as their database.
 
-### Auth
+### Auth ([swagger](https://github.com/bradleymcallister97/GeoAlert/blob/master/ms/auth/swagger.yml))
 The auth mircoservice is in charge of creating, logging in and verifying sessions for users. 
 
 Once a user is created they are allowed to login. After a successful login the user will be given a [JWT](https://jwt.io/) token. This token will give the user access to the other available mircoservices.
 
 The user can also send a verify request to check and see if their token is still valid.
 
-### GeoAlerts
+### GeoAlerts ([swagger](https://github.com/bradleymcallister97/GeoAlert/blob/master/ms/geoAlerts/swagger.yml))
 The geoAlerts mircoservice allows authenticated users to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) their alerts.
 
 ### Improvements

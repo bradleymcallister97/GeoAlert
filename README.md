@@ -14,7 +14,7 @@ Once a user is created they are allowed to login. After a successful login the u
 The user can also send a verify request to check and see if their token is still valid.
 
 ### GeoAlerts ([swagger](https://github.com/bradleymcallister97/GeoAlert/blob/master/ms/geoAlerts/swagger.yml))
-The geoAlerts mircoservice allows authenticated users to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) their alerts.
+The geoAlerts mircoservice allows authenticated users to manage their alerts. Users can create, get, update and delete their alerts.
 
 ### Improvements
 Currently the authentication is done on each of the microservices. This was done since it was the simplest solution. A much better solution would be to use an API gateway, like [Kong](https://getkong.org/). The gateway would authenticate all requests before dispatching them to a mircoservice.
